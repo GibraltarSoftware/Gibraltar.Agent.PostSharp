@@ -30,7 +30,7 @@ namespace GSharp.Samples
     /// an application which is already using Trace or other logging systems without recompiling your application.
     /// </para>
     /// <para>
-    /// This example shows a typical winforms Program.Main() with a few recommended calls to make sure the
+    /// This example shows a typical WinForms Program.Main() with a few recommended calls to make sure the
     /// Gibraltar Agent can perform at its best.
     /// </para>
     /// <para>
@@ -38,7 +38,7 @@ namespace GSharp.Samples
     /// Gibraltar API.</para></remarks>
     internal static class Program
     {
-        public static TimeSpanCollection TimeSpans = new TimeSpanCollection();
+        public static readonly TimeSpanCollection TimeSpans = new TimeSpanCollection();
 
         [STAThread]
         private static void Main()

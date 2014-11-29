@@ -22,7 +22,7 @@ namespace GSharp.Samples
 {
     public partial class MainApp : Form
     {
-        private readonly List<WorkerUI> workerUIs = new List<WorkerUI>();
+        private readonly List<WorkerUI> _workerUIs = new List<WorkerUI>();
 
         public MainApp()
         {
@@ -44,10 +44,10 @@ namespace GSharp.Samples
             Trace.WriteLine("Adding a new worker thread");
 
             WorkerUI workerUI = new WorkerUI();
-            workerUIs.Add(workerUI);
-            tableLayoutPanel.Controls.Add(workerUI, workerUIs.Count, 0);
+            _workerUIs.Add(workerUI);
+            tableLayoutPanel.Controls.Add(workerUI, _workerUIs.Count, 0);
 
-            Trace.TraceInformation("Starting worker thread " + workerUIs.Count);
+            Trace.TraceInformation("Starting worker thread " + _workerUIs.Count);
             workerUI.Start();
         }
 
@@ -55,7 +55,7 @@ namespace GSharp.Samples
         {
             Trace.TraceInformation("Closing MainApp form.");
 
-            foreach (WorkerUI worker in workerUIs)
+            foreach (WorkerUI worker in _workerUIs)
                 worker.Stop();
 
             //MessageBox.Show(Program.TimeSpans.ToString(), "Cycle Time Summary");

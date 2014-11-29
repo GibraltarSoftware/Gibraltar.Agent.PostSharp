@@ -21,15 +21,15 @@ namespace GSharp.Samples
 {
     public partial class VerticalProgressBar : Control
     {
-        private Color m_BorderColor = Color.Black;
-        private int m_BorderWidth = 50;
-        private Color m_FillColor = Color.Green;
-        private volatile bool m_Invalidated;
-        private int m_ProgressInPercentage = 10;
+        private Color _borderColor = Color.Black;
+        private int _borderWidth = 50;
+        private Color _fillColor = Color.Green;
+        private volatile bool _invalidated;
+        private int _progressInPercentage = 10;
 
         public VerticalProgressBar()
         {
-            m_ProgressInPercentage = 0;
+            _progressInPercentage = 0;
 
             InitializeComponent();
 
@@ -39,10 +39,10 @@ namespace GSharp.Samples
 
         public Color BorderColor
         {
-            get { return m_BorderColor; }
+            get { return _borderColor; }
             set
             {
-                m_BorderColor = value;
+                _borderColor = value;
 
                 ThreadSafeInvalidate();
             }
@@ -50,10 +50,10 @@ namespace GSharp.Samples
 
         public int BorderWidth
         {
-            get { return m_BorderWidth; }
+            get { return _borderWidth; }
             set
             {
-                m_BorderWidth = value;
+                _borderWidth = value;
 
                 ThreadSafeInvalidate();
             }
@@ -61,10 +61,10 @@ namespace GSharp.Samples
 
         public Color FillColor
         {
-            get { return m_FillColor; }
+            get { return _fillColor; }
             set
             {
-                m_FillColor = value;
+                _fillColor = value;
 
                 ThreadSafeInvalidate();
             }
@@ -72,19 +72,19 @@ namespace GSharp.Samples
         
         public int ProgressInPercentage
         {
-            get { return m_ProgressInPercentage; }
+            get { return _progressInPercentage; }
             set
             {
-                m_ProgressInPercentage = value;
+                _progressInPercentage = value;
                 ThreadSafeInvalidate();
             }
         }
 
         private void ThreadSafeInvalidate()
         {
-            if (!m_Invalidated)
+            if (!_invalidated)
             {
-                m_Invalidated = true;
+                _invalidated = true;
                 if (InvokeRequired)
                     Invoke(new MethodInvoker(Invalidate));
                 else
@@ -94,7 +94,7 @@ namespace GSharp.Samples
 
         protected override void OnResize(System.EventArgs e)
         {
-            m_Invalidated = true;
+            _invalidated = true;
             Invalidate();
         }
 
@@ -107,17 +107,17 @@ namespace GSharp.Samples
 
             try
             {
-                pen = new Pen(m_BorderColor, m_BorderWidth);
-                brush = new SolidBrush(m_FillColor);
+                pen = new Pen(_borderColor, _borderWidth);
+                brush = new SolidBrush(_fillColor);
 
                 Rectangle borderRec = ClientRectangle;
 
-                borderRec.X = borderRec.X + m_BorderWidth / 2;
-                borderRec.Y = borderRec.Y + m_BorderWidth / 2;
-                borderRec.Width = borderRec.Width - m_BorderWidth;
-                borderRec.Height = borderRec.Height - m_BorderWidth;
+                borderRec.X = borderRec.X + _borderWidth / 2;
+                borderRec.Y = borderRec.Y + _borderWidth / 2;
+                borderRec.Width = borderRec.Width - _borderWidth;
+                borderRec.Height = borderRec.Height - _borderWidth;
 
-                int fillHeight = (borderRec.Height * (100 - m_ProgressInPercentage)) / 100;
+                int fillHeight = (borderRec.Height * (100 - _progressInPercentage)) / 100;
 
                 Rectangle fillRec = new Rectangle(borderRec.X, borderRec.Y + fillHeight, borderRec.Width, borderRec.Height - fillHeight);
 
@@ -126,7 +126,7 @@ namespace GSharp.Samples
             }
             finally
             {
-                m_Invalidated = false;
+                _invalidated = false;
 
                 if (pen != null)
                     pen.Dispose();
