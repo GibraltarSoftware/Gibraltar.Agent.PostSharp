@@ -1,4 +1,20 @@
-﻿using System;
+﻿// /*
+//    Copyright 2013 Gibraltar Software, Inc.
+//    
+//    Licensed under the Apache License, Version 2.0 (the "License");
+//    you may not use this file except in compliance with the License.
+//    You may obtain a copy of the License at
+// 
+//        http://www.apache.org/licenses/LICENSE-2.0
+// 
+//    Unless required by applicable law or agreed to in writing, software
+//    distributed under the License is distributed on an "AS IS" BASIS,
+//    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//    See the License for the specific language governing permissions and
+//    limitations under the License.
+// */
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
@@ -37,7 +53,7 @@ namespace Gibraltar.Agent.PostSharp
     /// 	<para>
     ///         Each metric is automatically recorded in a category in the form
     ///         {BaseCategory}.Field Monitoring.{Category}. See the <see cref="BaseCategory">BaseCategory</see> property for more information on changing the
-    ///         category root and the <see cref="Category">Category</see> propety for more
+    ///         category root and the <see cref="Category">Category</see> property for more
     ///         information on how the full category name is determined.
     ///     </para>
     /// 	<para><strong>Enabling and Disabling at Runtime</strong></para>
@@ -95,7 +111,7 @@ namespace Gibraltar.Agent.PostSharp
     /// <example>
     ///     You can associate the GField attribute with a single field or an entire class to
     ///     trace all methods in that class. You can also use attribute multicasting to apply
-    ///     it to all matching fiels or classes in your assembly (not generally recommended)
+    ///     it to all matching fields or classes in your assembly (not generally recommended)
     ///     <code lang="CS" title="Track a Single Field" description="Track changes for one field within a class">
     /// public class SampleApplication
     /// {
@@ -123,15 +139,15 @@ namespace Gibraltar.Agent.PostSharp
 
         private static bool s_Enabled = true;
 
-        private string m_MethodName;
-        private string m_ClassName;
-        private string m_CaptionName;
-        private string m_BaseCategory;
-        private GAspectBase.MetricValueType m_MetricValueType;
-        private bool m_IsStatic;
+        private string _methodName;
+        private string _className;
+        private string _captionName;
+        private string _baseCategory;
+        private GAspectBase.MetricValueType _metricValueType;
+        private bool _isStatic;
 
         [NonSerialized]
-        private Dictionary<int, string> m_InstanceNameLookup;
+        private Dictionary<int, string> _instanceNameLookup;
 
         /// <summary>
         /// Default constructor
@@ -144,8 +160,6 @@ namespace Gibraltar.Agent.PostSharp
             LogValueDetails = true;
         }
 
-        #region Public Properties and Methods
-
         /// <summary>
         /// The top level category for log messages and metrics.  Defaults to the name of the current application.
         /// </summary>
@@ -154,11 +168,11 @@ namespace Gibraltar.Agent.PostSharp
             get
             {
                 //we have to have a value, so if they set it to null or it got reserialized that way then return our default.
-                return string.IsNullOrEmpty(m_BaseCategory) ? GAspectBase.DefaultBaseCategory : m_BaseCategory;
+                return string.IsNullOrEmpty(_baseCategory) ? GAspectBase.DefaultBaseCategory : _baseCategory;
             }
             set
             {
-                m_BaseCategory = value;
+                _baseCategory = value;
             }
         }
 
@@ -284,21 +298,21 @@ namespace Gibraltar.Agent.PostSharp
                 throw new InvalidOperationException("There is no field information associated with the current location, so it can't be used. Location: " + targetLocation.Name);
 
             // This will be reported in the Class column of Gibraltar Analyst
-            m_ClassName = fieldInfo.DeclaringType.Namespace + "." + fieldInfo.DeclaringType.Name;
+            _className = fieldInfo.DeclaringType.Namespace + "." + fieldInfo.DeclaringType.Name;
 
             // This will be reported in the Method column of Gibraltar Analyst
-            m_MethodName = fieldInfo.Name;
+            _methodName = fieldInfo.Name;
 
             // This name will be included in the Caption column of Gibraltar Analyst
-            m_CaptionName = (Category ?? fieldInfo.DeclaringType.Name) + "." + (Name ?? fieldInfo.Name);
+            _captionName = (Category ?? fieldInfo.DeclaringType.Name) + "." + (Name ?? fieldInfo.Name);
 
             // For non-static fields, we have some fancy logic that will make it easy
             // and efficient to assign a meaningful name to each field instance.
             // Because the logic uses reflection, we cache values for runtime efficiency
-            m_IsStatic = fieldInfo.IsStatic;
+            _isStatic = fieldInfo.IsStatic;
 
             // Used to determine whether this field is suitable for graphing as a SampledMetric
-            m_MetricValueType = GAspectBase.GetMetricValueType(fieldInfo.FieldType);
+            _metricValueType = GAspectBase.GetMetricValueType(fieldInfo.FieldType);
         }
 
         /// <summary>
@@ -336,7 +350,7 @@ namespace Gibraltar.Agent.PostSharp
                     if (LogValue)
                         WriteLogMessage(context, previousValue, newValue, 2); //one to skip out of us, one to skip our caller which is an IL method that's setting the value.
 
-                    if (m_MetricValueType != GAspectBase.MetricValueType.NotNumeric)
+                    if (_metricValueType != GAspectBase.MetricValueType.NotNumeric)
                         WriteSample(context, previousValue, newValue);
                 }
             }
@@ -353,16 +367,14 @@ namespace Gibraltar.Agent.PostSharp
             base.RuntimeInitialize(locationInfo);
 
             //if it isn't static we need to create our instance lookup dictionary
-            if (!m_IsStatic)
-                m_InstanceNameLookup = new Dictionary<int, string>();
+            if (!_isStatic)
+                _instanceNameLookup = new Dictionary<int, string>();
         }
-
-        #endregion
 
         #region IMessageSourceProvider
 
-        // IMessageSourceProvider is a Gibrlatar interface.  We define it here to
-        // suppress Gibraltar's normal source code attribution logic.
+        // IMessageSourceProvider is a Loupe interface.  We define it here to
+        // avoid Loupe's normal source code attribution logic since we've already determined the proper location
 
         /// <summary>
         /// MethodName is part of the IMessageSourceProvider interface.
@@ -370,7 +382,7 @@ namespace Gibraltar.Agent.PostSharp
         /// we can still provide method and class name from information known
         /// at compilation.
         /// </summary>
-        string IMessageSourceProvider.MethodName { get { return m_MethodName; } }
+        string IMessageSourceProvider.MethodName { get { return _methodName; } }
 
         /// <summary>
         /// ClassName is part of the IMessageSourceProvider interface.
@@ -378,7 +390,7 @@ namespace Gibraltar.Agent.PostSharp
         /// we can still provide method and class name from information known
         /// at compilation.
         /// </summary>
-        string IMessageSourceProvider.ClassName { get { return m_ClassName; } }
+        string IMessageSourceProvider.ClassName { get { return _className; } }
 
         /// <summary>
         /// FileName is part of the IMessageSourceProvider interface.
@@ -474,7 +486,7 @@ namespace Gibraltar.Agent.PostSharp
 
         private bool IsStatic
         {
-            get { return m_InstanceNameLookup == null; }
+            get { return _instanceNameLookup == null; }
         }
 
         private static bool ValueChanged(object previousValue, object newValue)
@@ -530,7 +542,7 @@ namespace Gibraltar.Agent.PostSharp
             try
             {
                 double sampleValue;
-                if (m_MetricValueType == GAspectBase.MetricValueType.Boolean)
+                if (_metricValueType == GAspectBase.MetricValueType.Boolean)
                     sampleValue = ((bool)newValue) ? 1 : 0;
                 else
                     sampleValue = Convert.ToDouble(newValue);
@@ -565,11 +577,11 @@ namespace Gibraltar.Agent.PostSharp
         {
             string formattedValue = FormatValue(newValue);
             if (IsStatic)
-                return string.Format("Set {0} = {1}", m_CaptionName, formattedValue);
+                return string.Format("Set {0} = {1}", _captionName, formattedValue);
             else
             {
                 string instanceName = GetInstanceName(context.Instance);
-                return string.Format("Set {0}[{2}] = {1}", m_CaptionName, formattedValue, instanceName);
+                return string.Format("Set {0}[{2}] = {1}", _captionName, formattedValue, instanceName);
             }
         }
 
@@ -581,7 +593,7 @@ namespace Gibraltar.Agent.PostSharp
         /// formatting for log messages in GField. Captions are generally short and often don't
         /// contain any insertion strings. Descriptions are designed for longer values and are
         /// shown in the Log Message Detail section of Gibraltar Analyst, along with the Caption
-        /// (so it is not desirable to duplicate the caption in the descripton).
+        /// (so it is not desirable to duplicate the caption in the description).
         /// </remarks>
         /// <param name="context">The PostSharp location interception arguments.</param>
         /// <param name="previousValue">The value that the field is being changed from.</param>
@@ -625,9 +637,9 @@ namespace Gibraltar.Agent.PostSharp
         /// </summary>
         private SampledMetric GetMetric(object instance)
         {
-            string subCategory = (Category ?? m_ClassName);
+            string subCategory = (Category ?? _className);
             string category = GetBaseCategory(MetricSubCategory) + (string.IsNullOrEmpty(subCategory) ? string.Empty : "." + subCategory);
-            string caption = Name ?? m_MethodName;
+            string caption = Name ?? _methodName;
             string instanceName = IsStatic ? null : GetInstanceName(instance);
 
             try
@@ -635,7 +647,7 @@ namespace Gibraltar.Agent.PostSharp
                 SampledMetricDefinition metricDefinition;
                 if (SampledMetricDefinition.TryGetValue(LogSystem, category, caption, out metricDefinition) == false)
                 {
-                    string units = Units ?? (m_MetricValueType == GAspectBase.MetricValueType.Boolean ? "Boolean" : "Value");
+                    string units = Units ?? (_metricValueType == GAspectBase.MetricValueType.Boolean ? "Boolean" : "Value");
                     metricDefinition = SampledMetricDefinition.Register(LogSystem, category, caption, SamplingType.RawCount,
                         units, caption, "Monitor value changes for field " + caption);
                 }
@@ -664,9 +676,9 @@ namespace Gibraltar.Agent.PostSharp
             // to object instances
             int hashCode = instance.GetHashCode();
 
-            lock (m_InstanceNameLookup) //because there may be multiple threads running around in here at one time....
+            lock (_instanceNameLookup) //because there may be multiple threads running around in here at one time....
             {
-                bool foundName = m_InstanceNameLookup.TryGetValue(hashCode, out instanceName);
+                bool foundName = _instanceNameLookup.TryGetValue(hashCode, out instanceName);
 
                 // If instance not found in dictionary, figure out the name and save it for next time
                 if (!foundName)
@@ -678,7 +690,7 @@ namespace Gibraltar.Agent.PostSharp
                     if (string.IsNullOrEmpty(instanceName))
                         instanceName = "0x" + hashCode.ToString("X8");
 
-                    m_InstanceNameLookup.Add(hashCode, instanceName);
+                    _instanceNameLookup.Add(hashCode, instanceName);
                 }
             }
 

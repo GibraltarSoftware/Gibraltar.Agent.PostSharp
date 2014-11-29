@@ -1,22 +1,22 @@
-﻿#region Released to Public Domain by eSymmetrix, Inc.
-
-/********************************************************************************
- *   This file is sample code demonstrating Gibraltar integration with PostSharp
- *   
- *   This sample is free software: you have an unlimited rights to
- *   redistribute it and/or modify it.
- *   
- *   This sample is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *   
- *******************************************************************************/
+﻿// /*
+//    Copyright 2013 Gibraltar Software, Inc.
+//    
+//    Licensed under the Apache License, Version 2.0 (the "License");
+//    you may not use this file except in compliance with the License.
+//    You may obtain a copy of the License at
+// 
+//        http://www.apache.org/licenses/LICENSE-2.0
+// 
+//    Unless required by applicable law or agreed to in writing, software
+//    distributed under the License is distributed on an "AS IS" BASIS,
+//    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//    See the License for the specific language governing permissions and
+//    limitations under the License.
+// */
 
 using System;
 using System.Windows.Forms;
 using Gibraltar.Agent;
-
-#endregion
 
 namespace GSharp.Samples
 {
@@ -30,7 +30,7 @@ namespace GSharp.Samples
     /// an application which is already using Trace or other logging systems without recompiling your application.
     /// </para>
     /// <para>
-    /// This example shows a typical winforms Program.Main() with a few recommended calls to make sure the
+    /// This example shows a typical WinForms Program.Main() with a few recommended calls to make sure the
     /// Gibraltar Agent can perform at its best.
     /// </para>
     /// <para>
@@ -38,7 +38,7 @@ namespace GSharp.Samples
     /// Gibraltar API.</para></remarks>
     internal static class Program
     {
-        public static TimeSpanCollection TimeSpans = new TimeSpanCollection();
+        public static readonly TimeSpanCollection TimeSpans = new TimeSpanCollection();
 
         [STAThread]
         private static void Main()

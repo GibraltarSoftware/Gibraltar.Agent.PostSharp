@@ -1,16 +1,18 @@
-﻿#region Released to Public Domain by eSymmetrix, Inc.
-
-/********************************************************************************
- *   This file is sample code demonstrating Gibraltar integration with PostSharp
- *   
- *   This sample is free software: you have an unlimited rights to
- *   redistribute it and/or modify it.
- *   
- *   This sample is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *   
- *******************************************************************************/
+﻿// /*
+//    Copyright 2013 Gibraltar Software, Inc.
+//    
+//    Licensed under the Apache License, Version 2.0 (the "License");
+//    you may not use this file except in compliance with the License.
+//    You may obtain a copy of the License at
+// 
+//        http://www.apache.org/licenses/LICENSE-2.0
+// 
+//    Unless required by applicable law or agreed to in writing, software
+//    distributed under the License is distributed on an "AS IS" BASIS,
+//    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//    See the License for the specific language governing permissions and
+//    limitations under the License.
+// */
 
 using System;
 using System.Diagnostics;
@@ -21,54 +23,52 @@ using System.Windows.Forms;
 using Gibraltar.Agent;
 using Gibraltar.Agent.PostSharp;
 
-#endregion
-
 namespace GSharp.Samples
 {
     public partial class WorkerUI : UserControl
     {
-        private static int m_ThreadCount;
-        private bool m_KeepRunning;
+        private static int _threadCount;
+        private bool _keepRunning;
 
         [GField(InstanceNamer = "ThreadCount")]
-        private Thread m_WorkerThread;
+        private Thread _workerThread;
 
         [GField(InstanceNamer = "ThreadCount")]
-        private int m_WorkerThreadSpeed;
+        private int _workerThreadSpeed;
 
-        private int m_WorkerWaitTime;
-        private int m_cycleCount;
+        private int _workerWaitTime;
+        private int _cycleCount;
 
         [GField(InstanceNamer = "ThreadCount")]
-        private bool m_NothingUseful;
+        private bool _nothingUseful;
 
         public int ThreadCount
         {
-            get { return m_ThreadCount; }
+            get { return _threadCount; }
         }
 
         private void ComputeWaitTime()
         {
             // workerSpeed comes from m_workerThreadSpeed, which comes from trackBarSpeed, which ranges from 0 to 20
-            // This results in a sleep of 10..110ms per iteration resulting in max cylce time of about 2.5 seconds
-            m_WorkerWaitTime = 10 + 5 *(20 - m_WorkerThreadSpeed);
+            // This results in a sleep of 10..110ms per iteration resulting in max cycle time of about 2.5 seconds
+            _workerWaitTime = 10 + 5 *(20 - _workerThreadSpeed);
         }
 
         public WorkerUI()
         {
-            m_NothingUseful = true;
-            m_ThreadCount++;
+            _nothingUseful = true;
+            _threadCount++;
             InitializeComponent();
             trackbarSpeed.Minimum = 0;
             trackbarSpeed.Maximum = 20;
             trackbarSpeed.Value = 20;
-            m_WorkerThreadSpeed = trackbarSpeed.Value;
+            _workerThreadSpeed = trackbarSpeed.Value;
             ComputeWaitTime();
         }
 
         private void trackbarSpeed_ValueChanged(object sender, EventArgs e)
         {
-            m_WorkerThreadSpeed = trackbarSpeed.Value;
+            _workerThreadSpeed = trackbarSpeed.Value;
             ComputeWaitTime();
         }
 
@@ -80,7 +80,7 @@ namespace GSharp.Samples
             }
             else
             {
-                lblCycleCount.Text = m_cycleCount.ToString();
+                lblCycleCount.Text = _cycleCount.ToString();
                 verticalProgressBar1.ProgressInPercentage = 0;
                 verticalProgressBar2.ProgressInPercentage = 0;
                 verticalProgressBar3.ProgressInPercentage = 0;
@@ -106,9 +106,9 @@ namespace GSharp.Samples
 
         public void Start()
         {
-            m_KeepRunning = true;
-            m_WorkerThread = new Thread(WorkerThread) {IsBackground = true};
-            m_WorkerThread.Start();
+            _keepRunning = true;
+            _workerThread = new Thread(WorkerThread) {IsBackground = true};
+            _workerThread.Start();
         }
 
         private void WorkerThread()
@@ -120,7 +120,7 @@ namespace GSharp.Samples
             int progress2 = 0;
             int progress3 = 0;
 
-            while (m_KeepRunning)
+            while (_keepRunning)
             {
                 PerformLoopIteration(stopWatch, ref progress1, ref progress2, ref progress3);
             }
@@ -143,13 +143,13 @@ namespace GSharp.Samples
                 progress2 = 0;
                 progress3 += 20;
                 Trace.TraceInformation("Second bar has spilled over.");
-                m_NothingUseful = !m_NothingUseful;
+                _nothingUseful = !_nothingUseful;
             }
 
             if (progress3 > 100)
             {
                 progress3 = 0;
-                m_cycleCount++;
+                _cycleCount++;
                 stopWatch.Stop();
                 Trace.TraceWarning("Third bar has spilled over. Cycle-time: "
                                    + stopWatch.Elapsed.TotalSeconds.ToString("F2"));
@@ -168,15 +168,15 @@ namespace GSharp.Samples
             verticalProgressBar2.ProgressInPercentage = progress2;
             verticalProgressBar3.ProgressInPercentage = progress3;
 
-            Thread.Sleep(m_WorkerWaitTime);
+            Thread.Sleep(_workerWaitTime);
             return progress1;
         }
 
         public void Stop()
         {
-            m_KeepRunning = false; // Stop worker thread
-            if (m_WorkerThread != null)
-                m_WorkerThread.Join(500);
+            _keepRunning = false; // Stop worker thread
+            if (_workerThread != null)
+                _workerThread.Join(500);
         }
 
         private void WorkerUI_Resize(object sender, EventArgs e)

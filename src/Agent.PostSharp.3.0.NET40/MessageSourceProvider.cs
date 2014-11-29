@@ -1,4 +1,20 @@
-﻿using System;
+﻿// /*
+//    Copyright 2013 Gibraltar Software, Inc.
+//    
+//    Licensed under the Apache License, Version 2.0 (the "License");
+//    you may not use this file except in compliance with the License.
+//    You may obtain a copy of the License at
+// 
+//        http://www.apache.org/licenses/LICENSE-2.0
+// 
+//    Unless required by applicable law or agreed to in writing, software
+//    distributed under the License is distributed on an "AS IS" BASIS,
+//    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//    See the License for the specific language governing permissions and
+//    limitations under the License.
+// */
+
+using System;
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -15,10 +31,10 @@ namespace Gibraltar.Agent.PostSharp
     [DebuggerNonUserCode]
     internal class MessageSourceProvider : IMessageSourceProvider
     {
-        private string m_MethodName;
-        private string m_ClassName;
-        private string m_FileName;
-        private int m_LineNumber;
+        private string _methodName;
+        private string _className;
+        private string _fileName;
+        private int _lineNumber;
 
         /// <summary>
         /// Creates a MessageSourceProvider object to be used as an IMessageSourceProvider.
@@ -30,10 +46,10 @@ namespace Gibraltar.Agent.PostSharp
         /// usual direct PublishToLog() mechanism.</remarks>
         public MessageSourceProvider(string className, string methodName)
         {
-            m_MethodName = methodName;
-            m_ClassName = className;
-            m_FileName = null;
-            m_LineNumber = 0;
+            _methodName = methodName;
+            _className = className;
+            _fileName = null;
+            _lineNumber = 0;
         }
 
         /// <summary>
@@ -48,10 +64,10 @@ namespace Gibraltar.Agent.PostSharp
         /// usual direct PublishToLog() mechanism.</remarks>
         public MessageSourceProvider(string className, string methodName, string fileName, int lineNumber)
         {
-            m_MethodName = methodName;
-            m_ClassName = className;
-            m_FileName = fileName;
-            m_LineNumber = lineNumber;
+            _methodName = methodName;
+            _className = className;
+            _fileName = fileName;
+            _lineNumber = lineNumber;
         }
 
         /// <summary>
@@ -140,10 +156,10 @@ namespace Gibraltar.Agent.PostSharp
                 if (method == null)
                 {
                     // Ack! We got nothing!  Invalidate all of these which depend on it and are thus meaningless.
-                    m_MethodName = null;
-                    m_ClassName = null;
-                    m_FileName = null;
-                    m_LineNumber = 0;
+                    _methodName = null;
+                    _className = null;
+                    _fileName = null;
+                    _lineNumber = 0;
                 }
                 else
                 {
@@ -151,32 +167,32 @@ namespace Gibraltar.Agent.PostSharp
                     try
                     {
                         // MethodBase method = frame.GetMethod();
-                        m_ClassName = (method.DeclaringType == null) ? null : method.DeclaringType.FullName;
-                        m_MethodName = method.Name;
+                        _className = (method.DeclaringType == null) ? null : method.DeclaringType.FullName;
+                        _methodName = method.Name;
                     }
                     catch
                     {
-                        m_MethodName = null;
-                        m_ClassName = null;
+                        _methodName = null;
+                        _className = null;
                     }
 
                     try
                     {
                         //now see if we have file information
-                        m_FileName = frame.GetFileName();
-                        if (string.IsNullOrEmpty(m_FileName) == false)
+                        _fileName = frame.GetFileName();
+                        if (string.IsNullOrEmpty(_fileName) == false)
                         {
-                            m_LineNumber = frame.GetFileLineNumber();
+                            _lineNumber = frame.GetFileLineNumber();
                         }
                         else
                         {
-                            m_LineNumber = 0; // Not meaningful if there's no file name!
+                            _lineNumber = 0; // Not meaningful if there's no file name!
                         }
                     }
                     catch
                     {
-                        m_FileName = null;
-                        m_LineNumber = 0;
+                        _fileName = null;
+                        _lineNumber = 0;
                     }
                 }
             }
@@ -185,10 +201,10 @@ namespace Gibraltar.Agent.PostSharp
                 // Bleagh!  We got an unexpected failure (not caught and handled by a lower catch block as being expected).
                 DebugBreak(); // Stop the debugger here (if it's running, otherwise we won't alert on it).
 
-                m_MethodName = null;
-                m_ClassName = null;
-                m_FileName = null;
-                m_LineNumber = 0;
+                _methodName = null;
+                _className = null;
+                _fileName = null;
+                _lineNumber = 0;
             }
         }
 
@@ -213,22 +229,22 @@ namespace Gibraltar.Agent.PostSharp
         /// <summary>
         /// The simple name of the method which issued the log message.
         /// </summary>
-        public string MethodName { get { return m_MethodName; } }
+        public string MethodName { get { return _methodName; } }
 
         /// <summary>
         /// The full name of the class (with namespace) whose method issued the log message.
         /// </summary>
-        public string ClassName { get { return m_ClassName; } }
+        public string ClassName { get { return _className; } }
 
         /// <summary>
         /// The name of the file containing the method which issued the log message.
         /// </summary>
-        public string FileName { get { return m_FileName; } }
+        public string FileName { get { return _fileName; } }
 
         /// <summary>
         /// The line within the file at which the log message was issued.
         /// </summary>
-        public int LineNumber { get { return m_LineNumber; } }
+        public int LineNumber { get { return _lineNumber; } }
 
         #endregion
     }

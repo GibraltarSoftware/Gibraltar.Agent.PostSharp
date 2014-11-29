@@ -1,4 +1,20 @@
-﻿using System;
+﻿// /*
+//    Copyright 2013 Gibraltar Software, Inc.
+//    
+//    Licensed under the Apache License, Version 2.0 (the "License");
+//    you may not use this file except in compliance with the License.
+//    You may obtain a copy of the License at
+// 
+//        http://www.apache.org/licenses/LICENSE-2.0
+// 
+//    Unless required by applicable law or agreed to in writing, software
+//    distributed under the License is distributed on an "AS IS" BASIS,
+//    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//    See the License for the specific language governing permissions and
+//    limitations under the License.
+// */
+
+using System;
 using System.Diagnostics;
 using System.Reflection;
 using Gibraltar.Agent.Metrics;
@@ -104,11 +120,11 @@ namespace Gibraltar.Agent.PostSharp
 
         private static bool s_Enabled = true;
 
-        private string m_Namespace;
+        private string _namespace;
 
         // This local variable ensures that we log exit if we logged entry
         [NonSerialized]
-        private bool m_TracingEnabled;
+        private bool _tracingEnabled;
 
         /// <summary>
         /// Enables or disables timing for all methods tagged with GTimer in the current
@@ -150,7 +166,7 @@ namespace Gibraltar.Agent.PostSharp
         public override void CompileTimeInitialize(MethodBase method, AspectInfo info)
         {
             base.CompileTimeInitialize(method, info);
-            m_Namespace = method.DeclaringType.Namespace;
+            _namespace = method.DeclaringType.Namespace;
         }
 
         /// <summary>
@@ -160,8 +176,8 @@ namespace Gibraltar.Agent.PostSharp
         public override void OnEntry(MethodExecutionArgs eventArgs)
         {
             // Get out fast if tracing is disabled
-            m_TracingEnabled = Enabled;
-            if (!m_TracingEnabled)
+            _tracingEnabled = Enabled;
+            if (!_tracingEnabled)
                 return;
 
             eventArgs.MethodExecutionTag = Stopwatch.StartNew();
@@ -169,14 +185,14 @@ namespace Gibraltar.Agent.PostSharp
 
         /// <summary>
         /// For convenience in Analyst, each duration is stored in two metrics.
-        /// An overall metric is useful for charting hotspots grouping by method.
+        /// An overall metric is useful for charting hot spots grouping by method.
         /// Individual metrics per method are useful for graphing duration over time.
         /// </summary>
         [DebuggerHidden]
         public override void OnSuccess(MethodExecutionArgs eventArgs)
         {
             // Get out fast if tracing is disabled
-            if (!m_TracingEnabled)
+            if (!_tracingEnabled)
                 return;
 
             Stopwatch timer = eventArgs.MethodExecutionTag as Stopwatch;
@@ -213,10 +229,10 @@ namespace Gibraltar.Agent.PostSharp
             {
                 EventMetricSample sample = metric.CreateSample();
                 sample.SetValue(DurationValue, duration);
-                sample.SetValue(NamespaceValue, m_Namespace);
+                sample.SetValue(NamespaceValue, _namespace);
                 sample.SetValue(ClassValue, ((IMessageSourceProvider)this).ClassName);
                 sample.SetValue(MethodValue, ((IMessageSourceProvider)this).MethodName);
-                sample.SetValue(FullNameValue, m_Namespace + "." + CaptionName);
+                sample.SetValue(FullNameValue, _namespace + "." + CaptionName);
                 sample.Write();
             }
             catch (Exception ex)

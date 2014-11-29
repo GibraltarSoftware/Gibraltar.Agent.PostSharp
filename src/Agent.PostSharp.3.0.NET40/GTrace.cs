@@ -1,4 +1,20 @@
-﻿using System;
+﻿// /*
+//    Copyright 2013 Gibraltar Software, Inc.
+//    
+//    Licensed under the Apache License, Version 2.0 (the "License");
+//    you may not use this file except in compliance with the License.
+//    You may obtain a copy of the License at
+// 
+//        http://www.apache.org/licenses/LICENSE-2.0
+// 
+//    Unless required by applicable law or agreed to in writing, software
+//    distributed under the License is distributed on an "AS IS" BASIS,
+//    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//    See the License for the specific language governing permissions and
+//    limitations under the License.
+// */
+
+using System;
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -98,14 +114,14 @@ namespace Gibraltar.Agent.PostSharp
         private static bool s_Enabled = true;
 
         // Internal variables calculated at compile-time for run-time efficiency
-        private bool m_LogParameters;  // true if method has parameters AND LogParameters == true
-        private bool m_LogParameterDetails;  // true if LogParameterDetails == true
-        private bool m_LogReturnValue; // true if method has return value AND LogReturnValues == true
-        private string m_ParameterListFormat;
+        private bool _logParameters;  // true if method has parameters AND LogParameters == true
+        private bool _logParameterDetails;  // true if LogParameterDetails == true
+        private bool _logReturnValue; // true if method has return value AND LogReturnValues == true
+        private string _parameterListFormat;
 
         // Internal variables only used at run-time
         [NonSerialized]
-        private bool m_TracingEnabled;
+        private bool _tracingEnabled;
 
         #region Private Class TraceMethodState
 
@@ -219,20 +235,20 @@ namespace Gibraltar.Agent.PostSharp
             bool hasParameters = parameters != null && parameters.Length > 0;
             if (hasParameters)
             {
-                m_ParameterListFormat = string.Empty;
+                _parameterListFormat = string.Empty;
                 int paramOrdinal = 0;
                 foreach (ParameterInfo parameterInfo in parameters)
                 {
-                    m_ParameterListFormat += string.Format("{0} = {{{1}}}\r\n", parameterInfo.Name, paramOrdinal++);
+                    _parameterListFormat += string.Format("{0} = {{{1}}}\r\n", parameterInfo.Name, paramOrdinal++);
                 }
             }
-            m_LogParameters = hasParameters && LogParameters;
-            m_LogParameterDetails = LogParameterDetails;
+            _logParameters = hasParameters && LogParameters;
+            _logParameterDetails = LogParameterDetails;
 
             // Display return value if the method is not void and the option to include return value is set
             MethodInfo methodInfo = method as MethodInfo;
             bool hasReturnValue = ((methodInfo != null) && (methodInfo.ReturnType.Equals(typeof(void)) == false));
-            m_LogReturnValue = (hasReturnValue && LogReturnValue);
+            _logReturnValue = (hasReturnValue && LogReturnValue);
         }
 
         /// <summary>
@@ -242,16 +258,16 @@ namespace Gibraltar.Agent.PostSharp
         public override void OnEntry(MethodExecutionArgs eventArgs)
         {
             // Get out fast if tracing is disabled
-            m_TracingEnabled = Enabled;
-            if (!m_TracingEnabled)
+            _tracingEnabled = Enabled;
+            if (!_tracingEnabled)
                 return;
 
             // If the method has arguments, log the value of each parameter
             string description = null;
-            if (m_LogParameters)
+            if (_logParameters)
             {
-                string[] stringArray = ObjectArrayToStrings(eventArgs.Arguments.ToArray(), m_LogParameterDetails);
-                description = string.Format(m_ParameterListFormat, stringArray);
+                string[] stringArray = ObjectArrayToStrings(eventArgs.Arguments.ToArray(), _logParameterDetails);
+                description = string.Format(_parameterListFormat, stringArray);
             }
 
             string category = GetBaseCategory(EnterSubCategory);
@@ -271,7 +287,7 @@ namespace Gibraltar.Agent.PostSharp
         public override void OnExit(MethodExecutionArgs eventArgs)
         {
             // Get out fast if tracing is disabled
-            if (!m_TracingEnabled)
+            if (!_tracingEnabled)
                 return;
 
             // We need to unindent before calling Indent() below
@@ -309,7 +325,7 @@ namespace Gibraltar.Agent.PostSharp
                 }
 
                 // Format description text
-                string returnText = m_LogReturnValue ? "\r\nReturns: " + ObjectToString(eventArgs.ReturnValue, m_LogParameterDetails) : string.Empty;
+                string returnText = _logReturnValue ? "\r\nReturns: " + ObjectToString(eventArgs.ReturnValue, _logParameterDetails) : string.Empty;
                 string description = string.Format("Duration: {0}{1}", durationText, returnText);
                 string category = GetBaseCategory(ExitSubCategory);
 

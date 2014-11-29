@@ -1,28 +1,28 @@
-﻿#region Released to Public Domain by eSymmetrix, Inc.
-
-/********************************************************************************
- *   This file is sample code demonstrating Gibraltar integration with PostSharp
- *   
- *   This sample is free software: you have an unlimited rights to
- *   redistribute it and/or modify it.
- *   
- *   This sample is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *   
- *******************************************************************************/
+﻿// /*
+//    Copyright 2013 Gibraltar Software, Inc.
+//    
+//    Licensed under the Apache License, Version 2.0 (the "License");
+//    you may not use this file except in compliance with the License.
+//    You may obtain a copy of the License at
+// 
+//        http://www.apache.org/licenses/LICENSE-2.0
+// 
+//    Unless required by applicable law or agreed to in writing, software
+//    distributed under the License is distributed on an "AS IS" BASIS,
+//    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//    See the License for the specific language governing permissions and
+//    limitations under the License.
+// */
 
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Forms;
 
-#endregion
-
 namespace GSharp.Samples
 {
     public partial class MainApp : Form
     {
-        private readonly List<WorkerUI> workerUIs = new List<WorkerUI>();
+        private readonly List<WorkerUI> _workerUIs = new List<WorkerUI>();
 
         public MainApp()
         {
@@ -44,10 +44,10 @@ namespace GSharp.Samples
             Trace.WriteLine("Adding a new worker thread");
 
             WorkerUI workerUI = new WorkerUI();
-            workerUIs.Add(workerUI);
-            tableLayoutPanel.Controls.Add(workerUI, workerUIs.Count, 0);
+            _workerUIs.Add(workerUI);
+            tableLayoutPanel.Controls.Add(workerUI, _workerUIs.Count, 0);
 
-            Trace.TraceInformation("Starting worker thread " + workerUIs.Count);
+            Trace.TraceInformation("Starting worker thread " + _workerUIs.Count);
             workerUI.Start();
         }
 
@@ -55,7 +55,7 @@ namespace GSharp.Samples
         {
             Trace.TraceInformation("Closing MainApp form.");
 
-            foreach (WorkerUI worker in workerUIs)
+            foreach (WorkerUI worker in _workerUIs)
                 worker.Stop();
 
             //MessageBox.Show(Program.TimeSpans.ToString(), "Cycle Time Summary");

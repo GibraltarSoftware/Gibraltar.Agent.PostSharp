@@ -1,4 +1,20 @@
-﻿using System;
+﻿// /*
+//    Copyright 2013 Gibraltar Software, Inc.
+//    
+//    Licensed under the Apache License, Version 2.0 (the "License");
+//    you may not use this file except in compliance with the License.
+//    You may obtain a copy of the License at
+// 
+//        http://www.apache.org/licenses/LICENSE-2.0
+// 
+//    Unless required by applicable law or agreed to in writing, software
+//    distributed under the License is distributed on an "AS IS" BASIS,
+//    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//    See the License for the specific language governing permissions and
+//    limitations under the License.
+// */
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
@@ -14,12 +30,12 @@ namespace Gibraltar.Agent.PostSharp
 {
     /// <summary>
     /// A PostSharp aspect used to record how often a particular method in your
-    /// application is used, how long it takes to run, and whether it was ultimately succesful
+    /// application is used, how long it takes to run, and whether it was ultimately successful
     /// or not. It record both log messages and metrics to enable powerful analysis.
     /// </summary>
     /// <remarks>
     /// 	<para>GFeature is a PostSharp aspect used to record detailed information about how
-    ///     a particulare feature in your application is used. By associating the GFeature
+    ///     a particular feature in your application is used. By associating the GFeature
     ///     attribute with a method it will automatically record:</para>
     /// 	<list type="bullet">
     /// 		<item>A log message on method invocation with the input parameters and the
@@ -31,7 +47,7 @@ namespace Gibraltar.Agent.PostSharp
     ///         the method, if source code location information is available.</item>
     /// 		<item>An event metric sample is recorded with information on how long the
     ///         method ran, what each of its input parameters were, whether it ended with an
-    ///         exception, and its categorization. Using Gibratar Analyst you can dissect this
+    ///         exception, and its categorization. Using Loupe Desktop you can dissect this
     ///         information to understand what features are used most often (or least often),
     ///         how they're used, and how well they perform.</item>
     /// 	</list>
@@ -147,16 +163,14 @@ namespace Gibraltar.Agent.PostSharp
 
         private static bool s_Enabled = true;
 
-        #region Internal state
-
         // Internal variables calculated at compile-time for run-time efficiency
-        private bool m_LogParameters;  // true if method has parameters AND LogParameters == true
-        private bool m_LogParameterDetails;  // true if LogParameterDetails == true
-        private bool m_LogReturnValue; // true if method has return value AND LogReturnValues == true
-        private string m_ParameterListFormat;
-        private List<string> m_ParameterNames;
-        private List<GAspectBase.MetricValueType> m_ParameterMetricValueTypes;
-        private GAspectBase.MetricValueType m_ReturnMetricValueType;
+        private bool _logParameters;  // true if method has parameters AND LogParameters == true
+        private bool _logParameterDetails;  // true if LogParameterDetails == true
+        private bool _logReturnValue; // true if method has return value AND LogReturnValues == true
+        private string _parameterListFormat;
+        private List<string> _parameterNames;
+        private List<GAspectBase.MetricValueType> _parameterMetricValueTypes;
+        private GAspectBase.MetricValueType _returnMetricValueType;
 
         // Internal variables only used at run-time
         [NonSerialized]
@@ -175,8 +189,6 @@ namespace Gibraltar.Agent.PostSharp
             MessageSeverity = LogMessageSeverity.Information;
             ExceptionMessageSeverity = LogMessageSeverity.Error;
         }
-
-        #endregion
 
         /// <summary>
         /// Enables or disables recording for all methods tagged with GFeature in the current
@@ -316,29 +328,29 @@ namespace Gibraltar.Agent.PostSharp
 
             ParameterInfo[] parameters = method.GetParameters();
             bool hasParameters = parameters != null && parameters.Length > 0;
-            m_LogParameters = hasParameters && LogParameters;
-            m_LogParameterDetails = LogParameterDetails;
+            _logParameters = hasParameters && LogParameters;
+            _logParameterDetails = LogParameterDetails;
 
-            if ((m_LogParameters) && (parameters != null))
+            if ((_logParameters) && (parameters != null))
             {
-                m_ParameterNames = new List<string>();
-                m_ParameterMetricValueTypes = new List<MetricValueType>();
-                m_ParameterListFormat = string.Empty;
+                _parameterNames = new List<string>();
+                _parameterMetricValueTypes = new List<MetricValueType>();
+                _parameterListFormat = string.Empty;
                 for (int index = 0; index < parameters.Length; index++)
                 {
                     ParameterInfo parameterInfo = parameters[index];
-                    m_ParameterListFormat += string.Format("{0} = {{{1}}}\r\n", parameterInfo.Name, index);
-                    m_ParameterNames.Add(parameterInfo.Name);
-                    m_ParameterMetricValueTypes.Add(GetMetricValueType(parameterInfo.ParameterType));
+                    _parameterListFormat += string.Format("{0} = {{{1}}}\r\n", parameterInfo.Name, index);
+                    _parameterNames.Add(parameterInfo.Name);
+                    _parameterMetricValueTypes.Add(GetMetricValueType(parameterInfo.ParameterType));
                 }
             }
 
             // Display return value if the method is not void and the option to include return value is set
             MethodInfo methodInfo = method as MethodInfo;
             bool hasReturnValue = ((methodInfo != null) && (methodInfo.ReturnType != typeof (void)));
-            m_LogReturnValue = hasReturnValue && LogReturnValue;
-            if (m_LogReturnValue)
-                m_ReturnMetricValueType = GetMetricValueType(methodInfo.ReturnType);
+            _logReturnValue = hasReturnValue && LogReturnValue;
+            if (_logReturnValue)
+                _returnMetricValueType = GetMetricValueType(methodInfo.ReturnType);
         }
 
         /// <summary>
@@ -354,11 +366,11 @@ namespace Gibraltar.Agent.PostSharp
 
             // If the method has arguments, log the value of each parameter
             string description = null;
-            if (m_LogParameters)
+            if (_logParameters)
             {
 
-                string[] stringArray = ObjectArrayToStrings(eventArgs.Arguments.ToArray(), m_LogParameterDetails);
-                description = string.Format(m_ParameterListFormat, stringArray);
+                string[] stringArray = ObjectArrayToStrings(eventArgs.Arguments.ToArray(), _logParameterDetails);
+                description = string.Format(_parameterListFormat, stringArray);
             }
 
             string caption = string.Format("{0} {1} Called", Caption, CaptionName);
@@ -417,8 +429,6 @@ namespace Gibraltar.Agent.PostSharp
             }
         }
 
-        #region Private Properties and Methods
-
         /// <summary>
         /// The category we should use for logging which is not feature specific.
         /// </summary>
@@ -447,30 +457,30 @@ namespace Gibraltar.Agent.PostSharp
                 sample.SetValue(ThreadValue, "Thread " + Thread.CurrentThread.ManagedThreadId);
 
                 // Write parameter values, if applicable
-                if (m_LogParameters)
+                if (_logParameters)
                 {
                     object[] array = eventArgs.Arguments.ToArray();
-                    for (int index = 0; index < m_ParameterMetricValueTypes.Count; index++)
+                    for (int index = 0; index < _parameterMetricValueTypes.Count; index++)
                     {
-                        switch (m_ParameterMetricValueTypes[index])
+                        switch (_parameterMetricValueTypes[index])
                         {
                             case GAspectBase.MetricValueType.Numeric:
-                                sample.SetValue(m_ParameterNames[index], Convert.ToDouble(array[index]));
+                                sample.SetValue(_parameterNames[index], Convert.ToDouble(array[index]));
                                 break;
                             case GAspectBase.MetricValueType.Boolean:
-                                sample.SetValue(m_ParameterNames[index], ((bool)array[index]) ? 1 : 0);
+                                sample.SetValue(_parameterNames[index], ((bool)array[index]) ? 1 : 0);
                                 break;
                             default:
-                                sample.SetValue(m_ParameterNames[index], ObjectToString(array[index], m_LogParameterDetails));
+                                sample.SetValue(_parameterNames[index], ObjectToString(array[index], _logParameterDetails));
                                 break;
                         }
                     }
                 }
 
                 // Write return value, if applicable
-                if (m_LogReturnValue)
+                if (_logReturnValue)
                 {
-                    switch (m_ReturnMetricValueType)
+                    switch (_returnMetricValueType)
                     {
                         case GAspectBase.MetricValueType.Numeric:
                             sample.SetValue(ResultValue, Convert.ToDouble(eventArgs.ReturnValue));
@@ -479,7 +489,7 @@ namespace Gibraltar.Agent.PostSharp
                             sample.SetValue(ResultValue, ((bool)eventArgs.ReturnValue) ? 1 : 0);
                             break;
                         default:
-                            sample.SetValue(ResultValue, ObjectToString(eventArgs.ReturnValue, m_LogParameterDetails));
+                            sample.SetValue(ResultValue, ObjectToString(eventArgs.ReturnValue, _logParameterDetails));
                             break;
                     }
                 }
@@ -532,16 +542,16 @@ namespace Gibraltar.Agent.PostSharp
                     ourMetricDefinition.DefaultValue = ourMetricDefinition.AddValue(DurationValue, typeof(TimeSpan), SummaryFunction.Average, "ms", "Duration", "Average execution duration");
                     ourMetricDefinition.AddValue(ThreadValue, typeof(string), SummaryFunction.Average, string.Empty, "Thread", "Managed Thread ID of call");
 
-                    if (m_LogParameters)
+                    if (_logParameters)
                     {
-                        for (int index = 0; index < m_ParameterMetricValueTypes.Count; index++)
+                        for (int index = 0; index < _parameterMetricValueTypes.Count; index++)
                         {
-                            string name = m_ParameterNames[index];
-                            string description = string.Format("{0} Parameter Value", m_ParameterNames[index]);
+                            string name = _parameterNames[index];
+                            string description = string.Format("{0} Parameter Value", _parameterNames[index]);
                             Type metricType;
                             SummaryFunction summaryFunction;
                             string units;
-                            switch (m_ParameterMetricValueTypes[index])
+                            switch (_parameterMetricValueTypes[index])
                             {
                                 case GAspectBase.MetricValueType.Numeric:
                                     metricType = typeof(double);
@@ -564,9 +574,9 @@ namespace Gibraltar.Agent.PostSharp
                         }
                     }
 
-                    if (m_LogReturnValue)
+                    if (_logReturnValue)
                     {
-                        switch (m_ReturnMetricValueType)
+                        switch (_returnMetricValueType)
                         {
                             case GAspectBase.MetricValueType.Numeric:
                                 ourMetricDefinition.AddValue(ResultValue, typeof(double), SummaryFunction.Average, "Value", "Result", "Return value of the method implementing this feature");
@@ -605,7 +615,5 @@ namespace Gibraltar.Agent.PostSharp
                 return null;
             }
         }
-
-        #endregion
     }
 }

@@ -1,35 +1,35 @@
-﻿#region Released to Public Domain by eSymmetrix, Inc.
-
-/********************************************************************************
- *   This file is sample code demonstrating Gibraltar integration with PostSharp
- *   
- *   This sample is free software: you have an unlimited rights to
- *   redistribute it and/or modify it.
- *   
- *   This sample is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *   
- *******************************************************************************/
+﻿// /*
+//    Copyright 2013 Gibraltar Software, Inc.
+//    
+//    Licensed under the Apache License, Version 2.0 (the "License");
+//    you may not use this file except in compliance with the License.
+//    You may obtain a copy of the License at
+// 
+//        http://www.apache.org/licenses/LICENSE-2.0
+// 
+//    Unless required by applicable law or agreed to in writing, software
+//    distributed under the License is distributed on an "AS IS" BASIS,
+//    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//    See the License for the specific language governing permissions and
+//    limitations under the License.
+// */
 
 using System.Drawing;
 using System.Windows.Forms;
-
-#endregion
 
 namespace GSharp.Samples
 {
     public partial class VerticalProgressBar : Control
     {
-        private Color m_BorderColor = Color.Black;
-        private int m_BorderWidth = 50;
-        private Color m_FillColor = Color.Green;
-        private volatile bool m_Invalidated;
-        private int m_ProgressInPercentage = 10;
+        private Color _borderColor = Color.Black;
+        private int _borderWidth = 50;
+        private Color _fillColor = Color.Green;
+        private volatile bool _invalidated;
+        private int _progressInPercentage = 10;
 
         public VerticalProgressBar()
         {
-            m_ProgressInPercentage = 0;
+            _progressInPercentage = 0;
 
             InitializeComponent();
 
@@ -39,10 +39,10 @@ namespace GSharp.Samples
 
         public Color BorderColor
         {
-            get { return m_BorderColor; }
+            get { return _borderColor; }
             set
             {
-                m_BorderColor = value;
+                _borderColor = value;
 
                 ThreadSafeInvalidate();
             }
@@ -50,10 +50,10 @@ namespace GSharp.Samples
 
         public int BorderWidth
         {
-            get { return m_BorderWidth; }
+            get { return _borderWidth; }
             set
             {
-                m_BorderWidth = value;
+                _borderWidth = value;
 
                 ThreadSafeInvalidate();
             }
@@ -61,10 +61,10 @@ namespace GSharp.Samples
 
         public Color FillColor
         {
-            get { return m_FillColor; }
+            get { return _fillColor; }
             set
             {
-                m_FillColor = value;
+                _fillColor = value;
 
                 ThreadSafeInvalidate();
             }
@@ -72,19 +72,19 @@ namespace GSharp.Samples
         
         public int ProgressInPercentage
         {
-            get { return m_ProgressInPercentage; }
+            get { return _progressInPercentage; }
             set
             {
-                m_ProgressInPercentage = value;
+                _progressInPercentage = value;
                 ThreadSafeInvalidate();
             }
         }
 
         private void ThreadSafeInvalidate()
         {
-            if (!m_Invalidated)
+            if (!_invalidated)
             {
-                m_Invalidated = true;
+                _invalidated = true;
                 if (InvokeRequired)
                     Invoke(new MethodInvoker(Invalidate));
                 else
@@ -94,7 +94,7 @@ namespace GSharp.Samples
 
         protected override void OnResize(System.EventArgs e)
         {
-            m_Invalidated = true;
+            _invalidated = true;
             Invalidate();
         }
 
@@ -107,17 +107,17 @@ namespace GSharp.Samples
 
             try
             {
-                pen = new Pen(m_BorderColor, m_BorderWidth);
-                brush = new SolidBrush(m_FillColor);
+                pen = new Pen(_borderColor, _borderWidth);
+                brush = new SolidBrush(_fillColor);
 
                 Rectangle borderRec = ClientRectangle;
 
-                borderRec.X = borderRec.X + m_BorderWidth / 2;
-                borderRec.Y = borderRec.Y + m_BorderWidth / 2;
-                borderRec.Width = borderRec.Width - m_BorderWidth;
-                borderRec.Height = borderRec.Height - m_BorderWidth;
+                borderRec.X = borderRec.X + _borderWidth / 2;
+                borderRec.Y = borderRec.Y + _borderWidth / 2;
+                borderRec.Width = borderRec.Width - _borderWidth;
+                borderRec.Height = borderRec.Height - _borderWidth;
 
-                int fillHeight = (borderRec.Height * (100 - m_ProgressInPercentage)) / 100;
+                int fillHeight = (borderRec.Height * (100 - _progressInPercentage)) / 100;
 
                 Rectangle fillRec = new Rectangle(borderRec.X, borderRec.Y + fillHeight, borderRec.Width, borderRec.Height - fillHeight);
 
@@ -126,7 +126,7 @@ namespace GSharp.Samples
             }
             finally
             {
-                m_Invalidated = false;
+                _invalidated = false;
 
                 if (pen != null)
                     pen.Dispose();

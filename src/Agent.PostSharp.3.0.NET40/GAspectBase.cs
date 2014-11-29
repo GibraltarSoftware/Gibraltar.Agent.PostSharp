@@ -1,4 +1,20 @@
-﻿using System;
+﻿// /*
+//    Copyright 2013 Gibraltar Software, Inc.
+//    
+//    Licensed under the Apache License, Version 2.0 (the "License");
+//    you may not use this file except in compliance with the License.
+//    You may obtain a copy of the License at
+// 
+//        http://www.apache.org/licenses/LICENSE-2.0
+// 
+//    Unless required by applicable law or agreed to in writing, software
+//    distributed under the License is distributed on an "AS IS" BASIS,
+//    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//    See the License for the specific language governing permissions and
+//    limitations under the License.
+// */
+
+using System;
 using System.Diagnostics;
 using System.Reflection;
 using System.Text;
@@ -15,15 +31,13 @@ namespace Gibraltar.Agent.PostSharp
     public abstract class GAspectBase : OnMethodBoundaryAspect, IMessageSourceProvider
     {
         private const int IndentSize = 2;
-        private string m_MethodName;
-        private string m_ClassName;
+        private string _methodName;
+        private string _className;
 
         [NonSerialized] //we need this to be figured out at runtime.
         private static string s_DefaultCategoryBase;
 
-        private string m_BaseCategory;
-
-        #region Public Properties and Methods
+        private string _baseCategory;
 
         /// <summary>
         /// The top level category for log messages and metrics.  Defaults to the name of the current application.
@@ -33,17 +47,13 @@ namespace Gibraltar.Agent.PostSharp
             get
             {
                 //we have to have a value, so if they set it to null or it got reserialized that way then return our default.
-                return string.IsNullOrEmpty(m_BaseCategory) ? DefaultBaseCategory : m_BaseCategory;
+                return string.IsNullOrEmpty(_baseCategory) ? DefaultBaseCategory : _baseCategory;
             }
             set
             {
-                m_BaseCategory = value; 
+                _baseCategory = value; 
             }
         }
-
-        #endregion
-
-        #region Protected Propeties and Methods
 
         /// <summary>
         /// A display caption that is calculated at compile time
@@ -199,12 +209,10 @@ namespace Gibraltar.Agent.PostSharp
             return stringArray;
         }
 
-        #endregion
-
         #region IMessageSourceProvider
 
-        // IMessageSourceProvider is a Gibrlatar interface.  We define it here to
-        // suppress Gibraltar's normal source code attribution logic.
+        // IMessageSourceProvider is a Loupe interface.  We define it here to
+        // avoid Loupe's normal source code attribution logic since we've already determined the proper location
 
         /// <summary>
         /// MethodName is part of the IMessageSourceProvider interface.
@@ -212,7 +220,7 @@ namespace Gibraltar.Agent.PostSharp
         /// we can still provide method and class name from information known
         /// at compilation.
         /// </summary>
-        string IMessageSourceProvider.MethodName { get { return m_MethodName; } }
+        string IMessageSourceProvider.MethodName { get { return _methodName; } }
 
         /// <summary>
         /// ClassName is part of the IMessageSourceProvider interface.
@@ -220,7 +228,7 @@ namespace Gibraltar.Agent.PostSharp
         /// we can still provide method and class name from information known
         /// at compilation.
         /// </summary>
-        string IMessageSourceProvider.ClassName { get { return m_ClassName; } }
+        string IMessageSourceProvider.ClassName { get { return _className; } }
 
         /// <summary>
         /// FileName is part of the IMessageSourceProvider interface.
@@ -245,10 +253,10 @@ namespace Gibraltar.Agent.PostSharp
         public override void CompileTimeInitialize(MethodBase method, AspectInfo info)
         {
             // This will be reported in the Class column of Gibraltar Analyst
-            m_ClassName = method.DeclaringType.Namespace + "." + method.DeclaringType.Name;
+            _className = method.DeclaringType.Namespace + "." + method.DeclaringType.Name;
 
             // This will be reported in the Method column of Gibraltar Analyst
-            m_MethodName = method.Name;
+            _methodName = method.Name;
 
             CaptionName = method.DeclaringType.Name + "." + method.Name;
         }
