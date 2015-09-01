@@ -3,11 +3,12 @@
   <metadata>
     <id>Gibraltar.Agent.PostSharp.3.0</id>
     <version>$version$-beta</version>
-    <title>Gibraltar Loupe Agent for PostSharp 3.0</title>
+    <title>Loupe Agent for PostSharp 3.0</title>
     <authors>Gibraltar Software</authors>
     <owners>Gibraltar Software</owners>
+    <copyright>Copyright © 2008-2015 Gibraltar Software, Inc.</copyright>
     <licenseUrl>http://www.gibraltarsoftware.com/Support/Loupe/Documentation/WebFrame.html#Reference_GibraltarAgentLicense.html</licenseUrl>
-    <projectUrl>http://www.gibraltarsoftware.com/External/Getting-Started-video.aspx</projectUrl>
+    <projectUrl>https://github.com/GibraltarSoftware/Gibraltar.Agent.PostSharp</projectUrl>
     <iconUrl>http://www.gibraltarsoftware.com/loupe.ico</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Easily inject logging, profiling, and feature usage monitoring into your .NET application.  Records all information using the Loupe Agent which is designed for use in production.</description>
