@@ -1,9 +1,12 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agent.PostSharp.3.0.NET40", "src\Agent.PostSharp.3.0.NET40\Agent.PostSharp.3.0.NET40.csproj", "{068F4EE3-73E0-481C-96F2-E8948AC8905F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{CC731E7E-4799-4517-8EE4-81436FBC7E18} = {CC731E7E-4799-4517-8EE4-81436FBC7E18}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agent.PostSharp.3.0.NET45", "src\Agent.PostSharp.3.0.NET45\Agent.PostSharp.3.0.NET45.csproj", "{CC731E7E-4799-4517-8EE4-81436FBC7E18}"
 EndProject
@@ -12,6 +15,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencies", "{4453F46F-E10A-4992-AD77-A3120B52D6E6}"
 	ProjectSection(SolutionItems) = preProject
 		LICENSE.txt = LICENSE.txt
+		dependencies\NuGet.exe = dependencies\NuGet.exe
 		README.md = README.md
 	EndProjectSection
 EndProject

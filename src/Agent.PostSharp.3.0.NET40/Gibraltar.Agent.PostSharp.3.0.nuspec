@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>Gibraltar.Agent.PostSharp.3.0</id>
+    <version>$version$-beta</version>
+    <title>Gibraltar Loupe Agent for PostSharp 3.0</title>
+    <authors>Gibraltar Software</authors>
+    <owners>Gibraltar Software</owners>
+    <licenseUrl>http://www.gibraltarsoftware.com/Support/Loupe/Documentation/WebFrame.html#Reference_GibraltarAgentLicense.html</licenseUrl>
+    <projectUrl>http://www.gibraltarsoftware.com/External/Getting-Started-video.aspx</projectUrl>
+    <iconUrl>http://www.gibraltarsoftware.com/loupe.ico</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Easily inject logging, profiling, and feature usage monitoring into your .NET application.  Records all information using the Loupe Agent which is designed for use in production.</description>
+    <summary />
+    <tags>Loupe Logging PostSharp</tags>
+  </metadata>
+  <files>
+    <file src="..\Agent.PostSharp.3.0.NET45\bin\release\Gibraltar.Agent.Postsharp.3.0.NET45.dll" target="lib\net45" />
+    <file src="..\Agent.PostSharp.3.0.NET45\bin\release\Gibraltar.Agent.Postsharp.3.0.NET45.xml" target="lib\net45" />
+  </files>
+</package>

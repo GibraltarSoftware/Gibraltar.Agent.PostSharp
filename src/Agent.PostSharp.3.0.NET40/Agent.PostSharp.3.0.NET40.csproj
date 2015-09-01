@@ -40,9 +40,9 @@
     <DocumentationFile>bin\Release\Gibraltar.Agent.PostSharp.3.0.NET40.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Gibraltar.Agent, Version=3.7.0.0, Culture=neutral, PublicKeyToken=ca42a1ee8d2e42d3, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Gibraltar.Agent.3.7.0.2102\lib\4.0\Gibraltar.Agent.dll</HintPath>
+    <Reference Include="Gibraltar.Agent, Version=4.0.0.0, Culture=neutral, PublicKeyToken=ca42a1ee8d2e42d3, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Gibraltar.Agent.3.8.1.2710-beta\lib\net40\Gibraltar.Agent.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="PostSharp, Version=3.0.42.9, Culture=neutral, PublicKeyToken=b13fd38b8f9c99d7, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -68,6 +68,7 @@
     <Compile Include="RequiresPostSharp.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Gibraltar.Agent.PostSharp.3.0.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
@@ -76,6 +77,9 @@
     </PreBuildEvent>
   </PropertyGroup>
   <Import Project="..\..\packages\PostSharp.3.0.42\tools\PostSharp.targets" Condition="Exists('..\..\packages\PostSharp.3.0.42\tools\PostSharp.targets')" />
+  <PropertyGroup>
+    <PostBuildEvent>if $(ConfigurationName) == Release $(ProjectDir)..\..\dependencies\NuGet.exe Pack $(ProjectPath) -Prop Configuration=Release</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
