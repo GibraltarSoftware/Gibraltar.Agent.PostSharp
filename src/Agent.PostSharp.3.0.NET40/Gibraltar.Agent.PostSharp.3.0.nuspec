@@ -7,7 +7,7 @@
     <authors>Gibraltar Software</authors>
     <owners>Gibraltar Software</owners>
     <copyright>Copyright © 2008-2015 Gibraltar Software, Inc.</copyright>
-    <licenseUrl>http://www.gibraltarsoftware.com/Support/Loupe/Documentation/WebFrame.html#Reference_GibraltarAgentLicense.html</licenseUrl>
+    <licenseUrl>https://github.com/GibraltarSoftware/Gibraltar.Agent.PostSharp/blob/master/LICENSE.txt</licenseUrl>
     <projectUrl>https://github.com/GibraltarSoftware/Gibraltar.Agent.PostSharp</projectUrl>
     <iconUrl>http://www.gibraltarsoftware.com/loupe.ico</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
