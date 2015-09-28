@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Gibraltar.Agent.PostSharp.3.0</id>
-    <version>$version$-beta</version>
+    <version>$version$</version>
     <title>Loupe Agent for PostSharp 3.0</title>
     <authors>Gibraltar Software</authors>
     <owners>Gibraltar Software</owners>
