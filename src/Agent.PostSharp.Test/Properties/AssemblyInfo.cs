@@ -11,11 +11,11 @@ using Gibraltar.Agent.PostSharp;
 // associated with an assembly.
 
 [assembly: AssemblyTitle("PostSharp Sample")]
-[assembly: AssemblyDescription("Demonstrates Gibralar integration with PostSharp")]
+[assembly: AssemblyDescription("Demonstrates Lope integration with PostSharp")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("eSymmetrix, Inc")]
-[assembly: AssemblyProduct("Demo")]
-[assembly: AssemblyCopyright("Copyright © 2008-2010 eSymmetrix Inc.")]
+[assembly: AssemblyCompany("Gibraltar Software, Inc.")]
+[assembly: AssemblyProduct("Loupe")]
+[assembly: AssemblyCopyright("Copyright © 2008-2017 Gibraltar Software, Inc.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
