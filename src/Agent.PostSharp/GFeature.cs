@@ -142,8 +142,7 @@ namespace Gibraltar.Agent.PostSharp
     [DebuggerNonUserCode]
     [Serializable]
 #if PostSharpLicensed
-    [AspectRoleDependency(AspectDependencyAction.Order, AspectDependencyPosition.Before, StandardRoles.Tracing)]
-    [AspectRoleDependency(AspectDependencyAction.Order, AspectDependencyPosition.Before, StandardRoles.PerformanceInstrumentation)]
+    [ProvideAspectRole(StandardRoles.Tracing)]
     [AspectTypeDependency(AspectDependencyAction.Order, AspectDependencyPosition.After, typeof(GTimer))]
     [AspectTypeDependency(AspectDependencyAction.Order, AspectDependencyPosition.After, typeof(GTrace))]
     [AspectTypeDependency(AspectDependencyAction.Order, AspectDependencyPosition.After, typeof(GException))]
