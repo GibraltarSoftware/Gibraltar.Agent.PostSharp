@@ -40,8 +40,8 @@
     <DocumentationFile>bin\Release\Gibraltar.Agent.PostSharp.3.0.NET40.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Gibraltar.Agent, Version=4.7.0.0, Culture=neutral, PublicKeyToken=ca42a1ee8d2e42d3, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Gibraltar.Agent.4.7.10\lib\net40\Gibraltar.Agent.dll</HintPath>
+    <Reference Include="Gibraltar.Agent, Version=4.8.0.0, Culture=neutral, PublicKeyToken=ca42a1ee8d2e42d3, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Gibraltar.Agent.4.8.1\lib\net40\Gibraltar.Agent.dll</HintPath>
     </Reference>
     <Reference Include="PostSharp, Version=3.0.42.9, Culture=neutral, PublicKeyToken=b13fd38b8f9c99d7, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -56,13 +56,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GAspectBase.cs" />
-    <Compile Include="GException.cs" />
-    <Compile Include="GFeature.cs" />
-    <Compile Include="GField.cs" />
-    <Compile Include="GTimer.cs" />
-    <Compile Include="GTrace.cs" />
-    <Compile Include="MessageSourceProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RequiresPostSharp.cs" />
   </ItemGroup>
@@ -71,6 +64,7 @@
     <None Include="Gibraltar.Agent.PostSharp.3.0.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
+  <Import Project="..\Agent.PostSharp\Agent.PostSharp.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

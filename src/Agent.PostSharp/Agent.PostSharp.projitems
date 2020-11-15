@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>6fb7e459-d6d5-4c09-89c3-cadacfd7fc88</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Agent.PostSharp</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)GAspectBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GFeature.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GField.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GTimer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GTrace.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MessageSourceProvider.cs" />
+  </ItemGroup>
+</Project>
